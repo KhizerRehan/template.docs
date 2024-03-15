@@ -1,0 +1,35 @@
+## Github Action Deploy to Vercel
+
+```yml
+name: Preview Deployment
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+on:
+  push:
+    branches:
+      - main
+jobs:
+  Deploy-Preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=preview --token=${{ secrets.AWESOME_TOOLS_TOKEN }}
+      - name: Build Project Artifacts
+        run: vercel build --token=${{ secrets.AWESOME_TOOLS_TOKEN }}
+      - name: Deploy Project Artifacts to Vercel
+
+        ## Displaying NEW Deployment in Github Action logs:
+        run: |
+          deployment_output=$(vercel deploy --prebuilt --token=${{ secrets.AWESOME_TOOLS_TOKEN }} 2>&1)
+          deployment_url=$(echo "$deployment_output" | grep -oP '(?<=Preview: )\S+')
+          if [[ $? -eq 0 ]]; then
+            echo "Deployment URL: $deployment_url"
+          else
+            echo "Error deploying: $deployment_output"
+            exit 1
+          fi
+```
