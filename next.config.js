@@ -1,8 +1,8 @@
 const withNextra = require("nextra")({
   theme: "nextra-theme-docs",
   themeConfig: "./theme.config.tsx",
-  output: "export",
-  reactStrictMode: true,
+  // Add basePath
+  basePath: "/template.docs",
 });
 
 module.exports = withNextra();
