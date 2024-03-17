@@ -1,4 +1,4 @@
-name: Template.Docs Production Deployment
+name: Template Docs Production Deployment
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -25,6 +25,7 @@ jobs:
           deployment_output=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
           deployment_url=$(echo "$deployment_output" | grep -oP '(?<=Deployment: )\S+')
           if [[ $? -eq 0 ]]; then
+            echo "::set-output name=deployment_url::$deployment_url"
             echo "Deployment URL: $deployment_url"
           else
             echo "Error deploying: $deployment_output"
